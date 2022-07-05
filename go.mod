@@ -13,9 +13,9 @@ require (
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.2.3
 	github.com/google/uuid v1.3.0
-	github.com/kong/deck v1.12.3
-	github.com/kong/go-kong v0.29.0
-	github.com/kong/kubernetes-testing-framework v0.15.1
+	github.com/kong/deck v1.12.4-0.20220706191355-fd52b34ea50a
+	github.com/kong/go-kong v0.29.1-0.20220706182732-1f36d934eeab
+	github.com/kong/kubernetes-testing-framework v0.15.2-0.20220706223425-5706f3b26fcc
 	github.com/lithammer/dedent v1.1.0
 	github.com/miekg/dns v1.1.50
 	github.com/mitchellh/mapstructure v1.5.0
