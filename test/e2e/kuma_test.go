@@ -5,17 +5,10 @@ package e2e
 
 import (
 	"context"
-	"fmt"
-	"io"
-	"net/http"
-	"os"
-	"strings"
 	"testing"
-	"time"
 
 	"github.com/blang/semver/v4"
 	"github.com/kong/kubernetes-testing-framework/pkg/clusters"
-	"github.com/kong/kubernetes-testing-framework/pkg/clusters/addons/kong"
 	"github.com/kong/kubernetes-testing-framework/pkg/clusters/addons/kuma"
 	"github.com/kong/kubernetes-testing-framework/pkg/clusters/addons/loadimage"
 	"github.com/kong/kubernetes-testing-framework/pkg/clusters/addons/metallb"
@@ -23,10 +16,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	autoscalingv1 "k8s.io/api/autoscaling/v1"
-	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"github.com/kong/kubernetes-ingress-controller/v2/internal/metrics"
 )
 
 func TestDeployAllInOneDBLESSKuma(t *testing.T) {
@@ -84,7 +74,7 @@ func TestDeployAllInOneDBLESSKuma(t *testing.T) {
 
 	t.Log("running ingress tests to verify all-in-one deployed ingress controller and proxy are functional")
 	deployIngress(ctx, t, env)
-	service, err = env.Cluster().Client().CoreV1().Services("default").Get(ctx, "httpbin", metav1.GetOptions{})
+	service, err := env.Cluster().Client().CoreV1().Services("default").Get(ctx, "httpbin", metav1.GetOptions{})
 	service.ObjectMeta.Annotations["ingress.kubernetes.io/service-upstream"] = "true"
 	service, err = env.Cluster().Client().CoreV1().Services("default").Update(ctx, service, metav1.UpdateOptions{})
 	verifyIngress(ctx, t, env)
@@ -118,7 +108,7 @@ func TestDeployAllInOnePostgresKuma(t *testing.T) {
 	t.Log("deploying kong components")
 	manifest, err := getTestManifest(t, postgresPath)
 	require.NoError(t, err)
-	_ = deployKong(ctx, t, env, manifest)
+	deployment := deployKong(ctx, t, env, manifest)
 
 	t.Log("this deployment used a postgres backend, verifying that postgres migrations ran properly")
 	verifyPostgres(ctx, t, env)
@@ -148,7 +138,7 @@ func TestDeployAllInOnePostgresKuma(t *testing.T) {
 
 	t.Log("running ingress tests to verify all-in-one deployed ingress controller and proxy are functional")
 	deployIngress(ctx, t, env)
-	service, err = env.Cluster().Client().CoreV1().Services("default").Get(ctx, "httpbin", metav1.GetOptions{})
+	service, err := env.Cluster().Client().CoreV1().Services("default").Get(ctx, "httpbin", metav1.GetOptions{})
 	service.ObjectMeta.Annotations["ingress.kubernetes.io/service-upstream"] = "true"
 	service, err = env.Cluster().Client().CoreV1().Services("default").Update(ctx, service, metav1.UpdateOptions{})
 	verifyIngress(ctx, t, env)
